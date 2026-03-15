@@ -222,3 +222,165 @@ h1, h2, h3, h4, h5, h6 {
 .dashboard-filter {
   width: 180px;
 }
+
+/* Responsive Utilities & Media Queries */
+@media (max-width: 768px) {
+  :root {
+    --radius-md: 12px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  h1 { font-size: 2.2rem !important; }
+  h2 { font-size: 1.8rem !important; }
+  h3 { font-size: 1.3rem !important; }
+
+  .glass-panel {
+    padding: 20px !important;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .show-mobile {
+    display: block !important;
+  }
+
+  .flex-mobile-column {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* Table to Card Transformation Base */
+  .modern-table thead {
+    display: none;
+  }
+
+  .modern-table, .modern-table tbody, .modern-table tr, .modern-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .modern-table tr {
+    margin-bottom: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 12px;
+  }
+
+  .modern-table td {
+    padding: 8px 4px !important;
+    background: transparent !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .modern-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: hsl(var(--text-muted));
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .modern-table td:last-child {
+    border-bottom: none;
+  }
+}
+
+.show-mobile {
+  display: none;
+}
+
+/* Responsive Utilities & Media Queries */
+@media (max-width: 768px) {
+  :root {
+    --radius-md: 12px;
+    --radius-lg: 16px;
+  }
+
+  body {
+    font-size: 14px;
+  }
+
+  h1 { font-size: 2.2rem !important; }
+  h2 { font-size: 1.8rem !important; }
+  h3 { font-size: 1.3rem !important; }
+
+  .glass-panel {
+    padding: 20px !important;
+  }
+
+  .btn {
+    padding: 10px 18px;
+    font-size: 0.9rem;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .show-mobile {
+    display: block !important;
+  }
+
+  .flex-mobile-column {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  /* Table to Card Transformation Base */
+  .modern-table thead {
+    display: none;
+  }
+
+  .modern-table, .modern-table tbody, .modern-table tr, .modern-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .modern-table tr {
+    margin-bottom: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 12px;
+  }
+
+  .modern-table td {
+    padding: 8px 4px !important;
+    background: transparent !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+
+  .modern-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    color: hsl(var(--text-muted));
+    font-size: 0.75rem;
+    text-transform: uppercase;
+  }
+
+  .modern-table td:last-child {
+    border-bottom: none;
+  }
+}
+
+.show-mobile {
+  display: none;
+}

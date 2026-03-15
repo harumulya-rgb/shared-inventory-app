@@ -124,73 +124,73 @@ export default function Dashboard() {
 
   return (
     <div className="animate-fade-in" style={{ paddingBottom: '60px' }}>
-      <header style={{ marginBottom: '56px' }}>
-        <h1 style={{ fontSize: '3rem', marginBottom: '12px', fontWeight: 800 }}>Intelligence</h1>
+      <header style={{ marginBottom: '40px' }}>
+        <h1 style={{ fontWeight: 800 }}>Intelligence</h1>
         <p style={{ color: 'hsl(var(--text-muted))', fontSize: '1.1rem' }}>Material trajectories and operational flow analytics.</p>
       </header>
 
       {/* Stats Grid */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '32px', marginBottom: '40px' }}>
-        <div className="glass-panel" style={{ padding: '32px', position: 'relative' }}>
-          <div style={{ padding: '16px', background: 'hsla(var(--primary), 0.1)', borderRadius: '20px', color: 'hsl(var(--primary))', width: 'fit-content', marginBottom: '24px' }}>
-            <Package size={28} />
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '40px' }}>
+        <div className="glass-panel" style={{ padding: '24px', position: 'relative' }}>
+          <div style={{ padding: '12px', background: 'hsla(var(--primary), 0.1)', borderRadius: '16px', color: 'hsl(var(--primary))', width: 'fit-content', marginBottom: '20px' }}>
+            <Package size={24} />
           </div>
           <div>
-            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.85rem', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Total Materials</p>
-            <h2 style={{ fontSize: '2.5rem', margin: 0, fontWeight: 800 }}>{stats.totalMaterials}</h2>
+            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Total Materials</p>
+            <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: 800 }}>{stats.totalMaterials}</h2>
           </div>
-          <div style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><Package size={80} /></div>
+          <div className="hide-mobile" style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><Package size={60} /></div>
         </div>
 
-        <div className="glass-panel" style={{ padding: '32px', position: 'relative' }}>
-          <div style={{ padding: '16px', background: 'hsla(var(--success), 0.1)', borderRadius: '20px', color: 'hsl(var(--success))', width: 'fit-content', marginBottom: '24px' }}>
-            <TrendingUp size={28} />
+        <div className="glass-panel" style={{ padding: '24px', position: 'relative' }}>
+          <div style={{ padding: '12px', background: 'hsla(var(--success), 0.1)', borderRadius: '16px', color: 'hsl(var(--success))', width: 'fit-content', marginBottom: '20px' }}>
+            <TrendingUp size={24} />
           </div>
           <div>
-            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.85rem', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Average Price</p>
-            <h2 style={{ fontSize: '2.5rem', margin: 0, fontWeight: 800 }}>${stats.avgPrice}</h2>
+            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Average Price</p>
+            <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: 800 }}>${stats.avgPrice}</h2>
           </div>
-          <div style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><TrendingUp size={80} /></div>
+          <div className="hide-mobile" style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><TrendingUp size={60} /></div>
         </div>
 
-        <div className="glass-panel" style={{ padding: '32px', position: 'relative' }}>
-          <div style={{ padding: '16px', background: 'hsla(var(--warning), 0.1)', borderRadius: '20px', color: 'hsl(var(--warning))', width: 'fit-content', marginBottom: '24px' }}>
-            <AlertCircle size={28} />
+        <div className="glass-panel" style={{ padding: '24px', position: 'relative' }}>
+          <div style={{ padding: '12px', background: 'hsla(var(--warning), 0.1)', borderRadius: '16px', color: 'hsl(var(--warning))', width: 'fit-content', marginBottom: '20px' }}>
+            <AlertCircle size={24} />
           </div>
           <div>
-            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.85rem', marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Critial Alerts</p>
-            <h2 style={{ fontSize: '2.5rem', margin: 0, fontWeight: 800 }}>{stats.alerts}</h2>
+            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Critial Alerts</p>
+            <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: 800 }}>{stats.alerts}</h2>
           </div>
-          <div style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><AlertCircle size={80} /></div>
+          <div className="hide-mobile" style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><AlertCircle size={60} /></div>
         </div>
       </div>
 
       {/* Movement Log Table Section */}
-      <div className="glass-panel animate-slide-up" style={{ padding: '40px' }}>
+      <div className="glass-panel animate-slide-up" style={{ padding: '32px' }}>
         {status.message && (
           <div className="animate-fade-in" style={{ 
             backgroundColor: status.type === 'error' ? 'hsla(var(--danger), 0.1)' : 'hsla(var(--success), 0.1)', 
             border: `1px solid ${status.type === 'error' ? 'hsla(var(--danger), 0.2)' : 'hsla(var(--success), 0.2)'}`,
             color: status.type === 'error' ? 'hsl(var(--danger))' : 'hsl(var(--success))', 
-            padding: '20px 24px', borderRadius: 'var(--radius-md)', marginBottom: '32px', 
-            display: 'flex', alignItems: 'center', gap: '16px', fontWeight: 600, fontSize: '1.05rem'
+            padding: '16px 20px', borderRadius: 'var(--radius-md)', marginBottom: '32px', 
+            display: 'flex', alignItems: 'center', gap: '16px', fontWeight: 600, fontSize: '1rem'
           }}>
             {status.type === 'error' ? <AlertCircle size={24} /> : <CheckCircle2 size={24} />}
             {status.message}
           </div>
         )}
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+        <div className="flex-mobile-column" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', gap: '20px' }}>
             <h3 style={{ fontSize: '1.4rem', fontWeight: 700, margin: 0, display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <Clock size={24} color="hsl(var(--primary))" />
-                Material Movement Log
+                Movement Log
             </h3>
-            <div style={{ display: 'flex', gap: '12px' }}>
+            <div className="flex-mobile-column" style={{ display: 'flex', gap: '12px' }}>
                 <div style={{ position: 'relative' }}>
                     <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--text-muted))' }} />
                     <input 
-                        type="text" placeholder="Search movements..." 
-                        style={{ padding: '10px 10px 10px 36px', borderRadius: '10px', width: '240px' }} 
+                        type="text" placeholder="Search..." 
+                        style={{ padding: '10px 10px 10px 36px', borderRadius: '10px' }} 
                         className="input-field" 
                         value={searchTerm}
                         onChange={(e) => { setSearchTerm(e.target.value); setCurrentPage(1); }}
@@ -225,11 +225,10 @@ export default function Dashboard() {
                 ) : (
                     paginatedMovements.map((mov) => (
                         <tr key={mov.id}>
-                            <td>
+                            <td data-label="Date">
                                 <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>{new Date(mov.date).toLocaleDateString()}</div>
-                                <div style={{ fontSize: '0.7rem', color: 'hsl(var(--text-muted))', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Verified</div>
                             </td>
-                            <td>
+                            <td data-label="Resource">
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                                     <div style={{ padding: '6px', borderRadius: '8px', background: mov.type === 'RECEIVE' ? 'hsla(var(--success), 0.1)' : 'hsla(var(--danger), 0.1)', color: mov.type === 'RECEIVE' ? 'hsl(var(--success))' : 'hsl(var(--danger))' }}>
                                         {mov.type === 'RECEIVE' ? <ArrowDownLeft size={16} /> : <ArrowUpRight size={16} />}
@@ -237,16 +236,15 @@ export default function Dashboard() {
                                     <div style={{ fontWeight: 700 }}>{mov.materialName}</div>
                                 </div>
                             </td>
-                            <td>
+                            <td data-label="Context">
                                 <div style={{ fontSize: '0.9rem', color: 'hsl(var(--text-main))' }}>{mov.workgroup} / {mov.location}</div>
-                                <div style={{ fontSize: '0.75rem', color: 'hsl(var(--text-muted))' }}>{mov.activity}</div>
                             </td>
-                            <td>
+                            <td data-label="Quantity">
                                 <div style={{ fontWeight: 800, color: mov.type === 'RECEIVE' ? 'hsl(var(--success))' : 'hsl(var(--danger))' }}>
                                     {mov.type === 'RECEIVE' ? '+' : '-'}{mov.amount} {mov.unit}
                                 </div>
                             </td>
-                            <td style={{ textAlign: 'right' }}>
+                            <td data-label="Actions" style={{ textAlign: 'right' }}>
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                                     <button className="btn btn-secondary" style={{ padding: '8px' }} onClick={() => navigate('/issue', { state: { editId: mov.entryId }})} title="Modify Entry">
                                         <Edit2 size={16} />

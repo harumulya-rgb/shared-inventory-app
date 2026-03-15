@@ -3,7 +3,7 @@ import { LayoutDashboard, Package, Settings, LogOut, ClipboardList, ShieldCheck,
 import { supabase } from '../supabaseClient';
 import { useProfile } from '../contexts/ProfileContext';
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen, onClose }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { currentProfile, isLoading } = useProfile();
@@ -21,7 +21,7 @@ export default function Sidebar() {
   };
 
   return (
-    <div className="glass-panel" style={{
+    <aside className={`glass-panel sidebar ${isOpen ? 'open' : ''}`} style={{
       width: '260px',
       height: 'calc(100vh - 40px)',
       margin: '20px',
@@ -31,8 +31,27 @@ export default function Sidebar() {
       position: 'fixed',
       zIndex: 100,
       borderRadius: 'var(--radius-lg)',
-      border: '1px solid var(--glass-border)'
+      border: '1px solid var(--glass-border)',
+      transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
     }}>
+      <style>
+        {`
+          @media (max-width: 768px) {
+            .sidebar {
+              margin: 0 !important;
+              height: 100vh !important;
+              border-radius: 0 !important;
+              transform: translateX(-100%);
+              border-top: none;
+              border-bottom: none;
+              border-left: none;
+            }
+            .sidebar.open {
+              transform: translateX(0);
+            }
+          }
+        `}
+      </style>
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '48px', paddingLeft: '10px' }}>
         <div style={{ 
           background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-h) 80% 45%))',
@@ -60,7 +79,7 @@ export default function Sidebar() {
         transition: 'var(--transition)',
         border: '1px solid var(--glass-border)'
       }}
-      onClick={() => navigate('/settings')}
+      onClick={() => { navigate('/settings'); onClose?.(); }}
       onMouseEnter={(e) => e.currentTarget.style.borderColor = 'hsla(var(--primary), 0.3)'}
       onMouseLeave={(e) => e.currentTarget.style.borderColor = 'var(--glass-border)'}
       >
@@ -84,6 +103,7 @@ export default function Sidebar() {
             <Link 
               key={item.name} 
               to={item.path}
+              onClick={onClose}
               className={isActive ? "animate-pulse-slow" : ""}
               style={{
                 display: 'flex',
@@ -137,6 +157,6 @@ export default function Sidebar() {
           <span style={{ fontWeight: 600 }}>Secure Sign Out</span>
         </button>
       </div>
-    </div>
+    </aside>
   );
 }

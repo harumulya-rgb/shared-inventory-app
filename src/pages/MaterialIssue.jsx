@@ -192,10 +192,24 @@ export default function MaterialIssue() {
     return (
         <div className="animate-fade-in" style={{ maxWidth: '900px', margin: '0 auto', paddingBottom: '60px' }}>
             <header style={{ marginBottom: '56px' }}>
-                <h1 style={{ fontSize: '3rem', fontWeight: 800, marginBottom: '12px', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                <h1 className="mobile-title-lg" style={{ fontWeight: 800, marginBottom: '12px', letterSpacing: '-0.02em', display: 'flex', alignItems: 'center', gap: '16px' }}>
                     {transactionMode === 'ISSUE' ? <ArrowUpCircle size={40} color="hsl(var(--danger))" /> : <ArrowDownCircle size={40} color="hsl(var(--success))" />}
                     Inventory Flow
                 </h1>
+                <style>
+                  {`
+                    @media (max-width: 768px) {
+                      .mobile-title-lg { font-size: 2rem !important; }
+                      .mode-switcher { width: 100% !important; display: flex !important; }
+                      .mode-switcher button { flex: 1 !important; text-align: center !important; }
+                      .issue-form { padding: 24px !important; }
+                      .material-row { grid-template-columns: 1fr !important; gap: 12px !important; }
+                      .metadata-grid { grid-template-columns: 1fr !important; gap: 20px !important; }
+                      .form-actions { flex-direction: column !important; gap: 12px !important; }
+                      .form-actions button { width: 100% !important; }
+                    }
+                  `}
+                </style>
                 <p style={{ color: 'hsl(var(--text-muted))', fontSize: '1.1rem' }}>
                     {transactionMode === 'ISSUE' 
                         ? 'Register material distribution to specialized fields and operational workgroups.' 
@@ -204,7 +218,7 @@ export default function MaterialIssue() {
             </header>
 
             {/* Mode Switcher */}
-            <div style={{ 
+            <div className="mode-switcher" style={{ 
                 display: 'flex', 
                 gap: '8px', 
                 marginBottom: '40px', 
@@ -260,8 +274,8 @@ export default function MaterialIssue() {
                 </div>
             )}
 
-            <form onSubmit={handleSubmit} className="glass-panel" style={{ padding: '48px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px' }}>
+            <form onSubmit={handleSubmit} className="glass-panel issue-form" style={{ padding: '48px' }}>
+                <div className="flex-mobile-column" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '32px', gap: '16px' }}>
                     <h3 style={{ fontSize: '1.3rem', fontWeight: 700, margin: 0 }}>Line Items</h3>
                     <button type="button" onClick={addMaterialRow} className="btn btn-secondary" style={{ padding: '8px 24px', borderRadius: '12px' }}>
                         <Plus size={18} /> New Item
@@ -288,10 +302,11 @@ export default function MaterialIssue() {
                             const activeLogs = materialLogs.filter(l => String(l.material_id) === String(item.materialId)).sort((a,b) => new Date(b.changed_at) - new Date(a.changed_at));
 
                             return (
-                                <div key={index} className="animate-slide-up" style={{ 
+                                <div key={index} className="animate-slide-up material-row" style={{ 
                                     display: 'grid', gridTemplateColumns: 'minmax(200px, 2fr) 1fr 1fr auto', gap: '16px', 
                                     background: 'rgba(255,255,255,0.02)', padding: '24px', borderRadius: 'var(--radius-md)', alignItems: 'center',
-                                    border: '1px solid var(--glass-border)'
+                                    border: '1px solid var(--glass-border)',
+                                    position: 'relative'
                                 }}>
                                     <SearchableSelect 
                                         options={materials.map(m => ({ value: m.id, label: m.name }))}
@@ -319,9 +334,33 @@ export default function MaterialIssue() {
                                         <span style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--text-muted))', fontSize: '0.9rem' }}>$</span>
                                     </div>
 
-                                    <button type="button" onClick={() => removeMaterialRow(index)} style={{ background: 'transparent', border: 'none', color: 'hsl(var(--danger))', cursor: 'pointer', padding: '12px', transition: 'var(--transition)' }} onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.2)'} onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}>
+                                    <button 
+                                        type="button" 
+                                        onClick={() => removeMaterialRow(index)} 
+                                        style={{ 
+                                            background: 'transparent', 
+                                            border: 'none', 
+                                            color: 'hsl(var(--danger))', 
+                                            cursor: 'pointer', 
+                                            padding: '12px', 
+                                            transition: 'var(--transition)' 
+                                        }} 
+                                        className="mobile-remove-btn"
+                                        onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.2)'} 
+                                        onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+                                    >
                                         <Trash2 size={24} />
                                     </button>
+                                    <style>{`
+                                        @media (max-width: 768px) {
+                                            .mobile-remove-btn {
+                                                position: absolute;
+                                                top: 10px;
+                                                right: 10px;
+                                                padding: 8px !important;
+                                            }
+                                        }
+                                    `}</style>
                                 </div>
                             );
                         })
@@ -350,7 +389,7 @@ export default function MaterialIssue() {
                                 Transaction Metadata
                             </h3>
                             
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '32px' }}>
+                            <div className="metadata-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '32px' }}>
                                 <div>
                                     <label className="input-label">Ledger Date</label>
                                     <input type="date" name="date" className="input-field" value={formData.date} onChange={handleChange} required />
@@ -371,7 +410,7 @@ export default function MaterialIssue() {
                             </div>
 
                             {transactionMode === 'ISSUE' && (hasAssets || hasWorkshop) && (
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '32px' }}>
+                                <div className="metadata-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '32px' }}>
                                     {hasAssets && (
                                         <div>
                                             <label className="input-label">Responsible Worker (Tools/PPE) *</label>
@@ -400,7 +439,7 @@ export default function MaterialIssue() {
                             )}
 
                             {transactionMode === 'ISSUE' && hasAgronomical && (
-                                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '48px' }}>
+                                <div className="metadata-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginBottom: '48px' }}>
                                     <div>
                                         <label className="input-label">Target Field / Block *</label>
                                         <SearchableSelect 
@@ -432,7 +471,7 @@ export default function MaterialIssue() {
                                 </div>
                             )}
 
-                            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px' }}>
+                            <div className="form-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '20px' }}>
                                 <button type="button" onClick={() => setFormData(p => ({ ...p, selectedMaterials: [] }))} className="btn btn-secondary" disabled={loading} style={{ padding: '14px 32px' }}>Discard Draft</button>
                                 <button type="submit" className="btn btn-primary" style={{ background: transactionMode === 'RECEIVE' ? 'hsl(var(--success))' : 'hsl(var(--primary))', padding: '14px 48px' }} disabled={loading}>
                                     {loading ? 'Processing...' : transactionMode === 'ISSUE' ? 'Confirm Issuance' : 'Fulfill Receipt'}

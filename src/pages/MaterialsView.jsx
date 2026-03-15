@@ -234,19 +234,19 @@ export default function MaterialsView() {
         <table className="modern-table">
           <thead>
             <tr>
-              <th onClick={() => toggleSort('name')} style={{ cursor: 'pointer' }}>Material Information {sortConfig.key === 'name' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
-              <th onClick={() => toggleSort('category')} style={{ cursor: 'pointer' }}>Category {sortConfig.key === 'category' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
-              <th>Logistics Units</th>
-              <th onClick={() => toggleSort('price')} style={{ cursor: 'pointer' }}>Market Price {sortConfig.key === 'price' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
-              <th onClick={() => toggleSort('current_stock')} style={{ cursor: 'pointer' }}>Stock Level {sortConfig.key === 'current_stock' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
+              <th onClick={() => toggleSort('name')} style={{ cursor: 'pointer' }}>Material</th>
+              <th onClick={() => toggleSort('category')} style={{ cursor: 'pointer' }}>Category</th>
+              <th className="hide-mobile">Units</th>
+              <th onClick={() => toggleSort('price')} style={{ cursor: 'pointer' }}>Price</th>
+              <th onClick={() => toggleSort('current_stock')} style={{ cursor: 'pointer' }}>Stock</th>
               <th style={{ textAlign: 'right' }}>Management</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '80px', color: 'hsl(var(--text-muted))', background: 'transparent' }}>Synchronizing local state...</td></tr>
+              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '80px', color: 'hsl(var(--text-muted))', background: 'transparent' }}>Synchronizing...</td></tr>
             ) : filteredMaterials.length === 0 ? (
-              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '80px', color: 'hsl(var(--text-muted))', background: 'transparent' }}>No materials matched your search criteria.</td></tr>
+              <tr><td colSpan="6" style={{ textAlign: 'center', padding: '80px', color: 'hsl(var(--text-muted))', background: 'transparent' }}>No materials matched.</td></tr>
             ) : (
               filteredMaterials.map(mat => (
                 <tr 
@@ -256,21 +256,21 @@ export default function MaterialsView() {
                 >
                   {editingMaterial === mat.id ? (
                     <>
-                      <td style={{ minWidth: '240px' }}>
+                      <td data-label="Material">
                         <input name="name" className="input-field" value={editForm.name} onChange={handleEditChange} style={{ marginBottom: '8px' }} />
                         <input name="material_no" className="input-field" value={editForm.material_no} onChange={handleEditChange} placeholder="Serial #" style={{ fontSize: '0.8rem' }} />
                       </td>
-                      <td>
+                      <td data-label="Category">
                         <span style={{ fontSize: '0.85rem' }}>{mat.category || 'Uncategorized'}</span>
                       </td>
-                      <td>
+                      <td data-label="Units">
                         <input name="unit" className="input-field" value={editForm.unit} onChange={handleEditChange} style={{ width: '100px' }} />
                       </td>
-                      <td>
+                      <td data-label="Price">
                         <input type="number" name="price" className="input-field" value={editForm.price} onChange={handleEditChange} style={{ width: '120px' }} />
                       </td>
-                      <td style={{ fontWeight: 800 }}>{Number(mat.current_stock).toFixed(2)}</td>
-                      <td style={{ textAlign: 'right' }}>
+                      <td data-label="Stock" style={{ fontWeight: 800 }}>{Number(mat.current_stock).toFixed(2)}</td>
+                      <td data-label="Manage" style={{ textAlign: 'right' }}>
                         <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
                           <button className="btn btn-secondary" style={{ padding: '8px 16px' }} onClick={(e) => { e.stopPropagation(); setEditingMaterial(null); }}>Discard</button>
                           <button className="btn btn-primary" style={{ padding: '8px 16px' }} onClick={(e) => { e.stopPropagation(); saveEdit(); }} disabled={editLoading}>Apply</button>
@@ -279,13 +279,13 @@ export default function MaterialsView() {
                     </>
                   ) : (
                     <>
-                      <td>
+                      <td data-label="Material">
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
                           <span style={{ fontWeight: 700, fontSize: '1.05rem', color: 'white' }}>{mat.name}</span>
                           {mat.material_no && <span style={{ fontSize: '0.75rem', color: 'hsl(var(--text-muted))', letterSpacing: '0.05em' }}>ID: #{mat.material_no}</span>}
                         </div>
                       </td>
-                      <td>
+                      <td data-label="Category">
                         <span style={{ 
                             fontSize: '0.8rem', 
                             padding: '4px 10px', 
@@ -297,9 +297,9 @@ export default function MaterialsView() {
                           {mat.category || 'Uncategorized'}
                         </span>
                       </td>
-                      <td style={{ color: 'hsl(var(--text-muted))', fontWeight: 500 }}>{mat.unit}</td>
-                      <td style={{ fontWeight: 700, color: 'hsl(var(--primary))' }}>${Number(mat.price).toFixed(2)}</td>
-                      <td>
+                      <td data-label="Units" className="hide-mobile" style={{ color: 'hsl(var(--text-muted))', fontWeight: 500 }}>{mat.unit}</td>
+                      <td data-label="Price" style={{ fontWeight: 700, color: 'hsl(var(--primary))' }}>${Number(mat.price).toFixed(2)}</td>
+                      <td data-label="Stock">
                         <div style={{ 
                           display: 'inline-flex', 
                           padding: '4px 12px', 
@@ -309,12 +309,12 @@ export default function MaterialsView() {
                           fontWeight: 700,
                           fontSize: '0.85rem'
                         }}>
-                          {Number(mat.current_stock).toFixed(2)}
+                          {Number(mat.current_stock).toFixed(2)} <span className="show-mobile" style={{ marginLeft: '4px', fontSize: '0.7rem' }}>{mat.unit}</span>
                         </div>
                       </td>
-                      <td style={{ textAlign: 'right' }} onClick={e => e.stopPropagation()}>
+                      <td data-label="Manage" style={{ textAlign: 'right' }} onClick={e => e.stopPropagation()}>
                         <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                          <button className="btn btn-secondary" style={{ padding: '8px' }} title="View History" onClick={() => setSelectedHistoryMaterial(mat)}>
+                          <button className="btn btn-secondary" style={{ padding: '8px' }} title="History" onClick={() => setSelectedHistoryMaterial(mat)}>
                             <History size={16} />
                           </button>
                           <button className="btn btn-secondary" style={{ padding: '8px' }} title="Edit" onClick={(e) => startEdit(e, mat)}>
@@ -401,25 +401,26 @@ export default function MaterialsView() {
 
   return (
     <div className="animate-fade-in" style={{ paddingBottom: '40px' }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '56px' }}>
+      <header className="flex-mobile-column" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '40px', gap: '24px' }}>
         <div style={{ flex: 1 }}>
-          <h1 style={{ fontSize: '3rem', marginBottom: '12px', fontWeight: 800 }}>Materials</h1>
-          <p style={{ color: 'hsl(var(--text-muted))', fontSize: '1.1rem', marginBottom: '32px' }}>Global directory for estate inventory and unit logistics.</p>
+          <h1 style={{ fontWeight: 800 }}>Materials</h1>
+          <p style={{ color: 'hsl(var(--text-muted))', fontSize: '1.1rem', marginBottom: '24px' }}>Global directory for estate inventory and unit logistics.</p>
           
-          <div className="glass-panel" style={{ padding: '24px', display: 'flex', gap: '20px', alignItems: 'center' }}>
-            <div style={{ flex: 1, position: 'relative' }}>
+          <div className="glass-panel flex-mobile-column" style={{ padding: '20px', display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <div style={{ flex: 1, position: 'relative', width: '100%' }}>
               <Search size={18} style={{ position: 'absolute', left: '16px', top: '14px', color: 'hsl(var(--text-muted))' }} />
               <input 
                 type="text" 
                 className="input-field" 
-                placeholder="Search resources, workgroups, activity..." 
+                placeholder="Search resources..." 
                 style={{ width: '100%', paddingLeft: '48px' }} 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
             {activeTab === 'registry' && (
-              <div style={{ width: '220px' }}>
+              <div style={{ width: '100%', maxWidth: '220px' }} className="mobile-maxWidth-none">
+                <style>{`@media (max-width: 768px) { .mobile-maxWidth-none { max-width: none !important; } }`}</style>
                 <select 
                   className="input-field" 
                   value={categoryFilter}
@@ -436,7 +437,7 @@ export default function MaterialsView() {
             )}
           </div>
         </div>
-        <button className="btn btn-primary" style={{ padding: '14px 28px', marginLeft: '40px', marginTop: '10px' }}>
+        <button className="btn btn-primary" style={{ padding: '14px 28px' }}>
           <Plus size={20} /> New Material
         </button>
       </header>
