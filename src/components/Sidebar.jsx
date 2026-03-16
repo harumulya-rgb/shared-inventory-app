@@ -14,7 +14,7 @@ export default function Sidebar({ isOpen, onClose }) {
     { name: 'Issue Materials', path: '/issue', icon: Send },
     { name: 'Register Material', path: '/register', icon: ClipboardList },
     { name: 'Settings', path: '/settings', icon: Settings },
-  ];
+  ].filter(item => currentProfile || item.path === '/settings');
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();

@@ -91,47 +91,103 @@ export default function MaterialRegister() {
         let successCount = 0;
         let localCategories = [...materialCategories]; // Track added categories locally during the loop
 
+        const { data: existingMaterials } = await supabase
+          .from('materials')
+          .select('id, name, material_no, unit, price, category')
+          .eq('profile_id', currentProfile.id);
+
+        let updateCount = 0;
+        const updatesList = [];
+        const insertsList = [];
+
         for (const row of data) {
           if (!row.NAME || !row.UNIT) continue;
-          
+          const nameTrimmed = row.NAME.toString().trim();
+          const noTrimmed = row.MATERIAL_NO?.toString().trim() || null;
+          const priceVal = Math.ceil((parseFloat(row.PRICE) || 0) * 100) / 100;
+
+          const existing = existingMaterials?.find(m => 
+            m.name.toLowerCase() === nameTrimmed.toLowerCase() || 
+            (noTrimmed && m.material_no?.toLowerCase() === noTrimmed.toLowerCase())
+          );
+
+          if (existing) {
+            const hasChanges = existing.unit !== row.UNIT.toString() || 
+                               parseFloat(existing.price) !== priceVal ||
+                               (row.CATEGORY && existing.category !== row.CATEGORY.toString().trim());
+            
+            if (hasChanges) {
+              updateCount++;
+              updatesList.push({ row, existing, priceVal });
+            }
+          } else {
+            insertsList.push({ row, nameTrimmed, noTrimmed, priceVal });
+          }
+        }
+
+        let performUpdates = false;
+        if (updateCount > 0) {
+          performUpdates = window.confirm(`Found ${updateCount} existing materials with different data. Would you like to update their prices and units?`);
+        }
+
+        successCount = 0;
+
+        // Process Updates if confirmed
+        if (performUpdates) {
+          for (const item of updatesList) {
+            const { row, existing, priceVal } = item;
+            const { error: updateError } = await supabase
+              .from('materials')
+              .update({ 
+                unit: row.UNIT.toString(), 
+                price: priceVal, 
+                category: row.CATEGORY?.toString().trim() || existing.category,
+                material_no: row.MATERIAL_NO?.toString().trim() || null
+              })
+              .eq('id', existing.id);
+            if (!updateError) successCount++;
+          }
+        }
+
+        // Process Inserts
+        for (const item of insertsList) {
+          const { row, nameTrimmed, noTrimmed, priceVal } = item;
           let categoryName = row.CATEGORY?.toString().trim() || null;
-          
-          // Handle automatic category creation if needed
           if (categoryName) {
             const exists = localCategories.some(mc => mc.name.toLowerCase() === categoryName.toLowerCase());
             if (!exists) {
               const newCat = await addMaterialCategory(categoryName);
               if (newCat) {
                 categoryName = newCat.name;
-                localCategories.push(newCat); // Add to local list to prevent repeated addition in the same loop
+                localCategories.push(newCat);
               }
             } else {
-              // Normalize to existing case
               categoryName = localCategories.find(mc => mc.name.toLowerCase() === categoryName.toLowerCase())?.name || categoryName;
             }
           }
 
-          const priceVal = Math.ceil((parseFloat(row.PRICE) || 0) * 100) / 100;
-
           const { data: ins, error } = await supabase.from('materials').insert([{ 
               profile_id: currentProfile.id, 
-              name: row.NAME.toString(), 
+              name: nameTrimmed, 
               unit: row.UNIT.toString(), 
               price: priceVal, 
               category: categoryName,
-              material_no: row.MATERIAL_NO?.toString() || null
+              material_no: noTrimmed
           }]).select('id').single();
 
-          if (!error && parseFloat(row.INITIAL_STOCK) > 0) {
-            await supabase.from('entries').insert([{
-                profile_id: currentProfile.id, date: new Date().toISOString().split('T')[0],
-                field_id: systemDestinations.fieldId, activity_id: systemDestinations.activityId,
-                materials_used: [{ materialId: ins.id, amount: parseFloat(row.INITIAL_STOCK), unitPrice: priceVal, transaction_type: 'RECEIVE' }],
-                labor_days: 0, overtime: 0, hectare_achieve: 0, is_complete: false
-            }]);
+          if (!error) {
+            if (parseFloat(row.INITIAL_STOCK) > 0) {
+              await supabase.from('entries').insert([{
+                  profile_id: currentProfile.id, date: new Date().toISOString().split('T')[0],
+                  field_id: systemDestinations.fieldId, activity_id: systemDestinations.activityId,
+                  materials_used: [{ materialId: ins.id, amount: parseFloat(row.INITIAL_STOCK), unitPrice: priceVal, transaction_type: 'RECEIVE' }],
+                  labor_days: 0, overtime: 0, hectare_achieve: 0, is_complete: false
+              }]);
+            }
+            successCount++;
           }
-          successCount++;
         }
+
         setStatus({ type: 'success', message: `${successCount} materials successfully imported to ledger.` });
       } catch (err) {
         setStatus({ type: 'error', message: 'Import failed: Format mismatch.' });

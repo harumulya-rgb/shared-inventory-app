@@ -119,9 +119,16 @@ export default function Settings() {
                         </div>
                     </div>
                 ) : (
-                    <div style={{ padding: '60px', textAlign: 'center', border: '2px dashed var(--glass-border)', borderRadius: 'var(--radius-lg)', color: 'hsl(var(--text-muted))' }}>
-                        <ShieldCheck size={48} opacity={0.3} style={{ margin: '0 auto 20px' }} />
-                        <p style={{ fontSize: '1.1rem', fontWeight: 500 }}>Primary infrastructure offline. Please initialize or switch to an active estate.</p>
+                    <div className="animate-pulse" style={{ padding: '80px 40px', textAlign: 'center', border: '2px dashed hsla(var(--primary), 0.2)', borderRadius: '32px', background: 'hsla(var(--primary), 0.02)', color: 'hsl(var(--text-muted))' }}>
+                        <div style={{ width: '80px', height: '80px', borderRadius: '50%', background: 'hsla(var(--primary), 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 24px' }}>
+                            <ShieldCheck size={40} color="hsl(var(--primary))" />
+                        </div>
+                        <h3 style={{ fontSize: '1.8rem', fontWeight: 800, color: 'white', marginBottom: '12px' }}>Welcome to the Context</h3>
+                        <p style={{ fontSize: '1.1rem', maxWidth: '500px', margin: '0 auto 32px', lineHeight: 1.6 }}>Your account is active, but you haven't entered an estate workspace yet. Create a new environment or join an existing one below.</p>
+                        <div style={{ display: 'flex', justifyContent: 'center', gap: '8px', color: 'hsl(var(--primary))', fontWeight: 600 }}>
+                            <Zap size={18} />
+                            <span>Action Required below</span>
+                        </div>
                     </div>
                 )}
             </div>
