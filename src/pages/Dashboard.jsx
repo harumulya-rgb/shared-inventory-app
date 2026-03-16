@@ -34,13 +34,15 @@ export default function Dashboard() {
                 const worker = (workers || []).find(w => w.id === entry.worker_id);
                 const vehicle = (vehicles || []).find(v => v.id === entry.vehicle_id);
 
-                // Hierarchy-based destination resolution
-                let destination = 'Inventory / Store';
+                // Rich destination resolution: collect all valid parts
+                let parts = [];
                 if (mu.transaction_type === 'ISSUE') {
-                    if (vehicle) destination = `${vehicle.name} (${vehicle.registration_no || 'N/A'})`;
-                    else if (worker) destination = worker.name;
-                    else if (field && !field.name.includes('[SYSTEM]')) destination = field.name;
+                    if (vehicle) parts.push(`${vehicle.name} (${vehicle.registration_no || 'N/A'})`);
+                    if (worker) parts.push(worker.name);
+                    if (field && !field.name.includes('[SYSTEM]')) parts.push(field.name);
                 }
+                
+                const destination = parts.length > 0 ? parts.join(' / ') : (mu.transaction_type === 'RECEIVE' ? 'Inventory Recv' : 'Internal Adj');
                 
                 log.push({
                     id: `${entry.id}-${idx}`,
@@ -52,7 +54,7 @@ export default function Dashboard() {
                     type: mu.transaction_type || 'ISSUE',
                     workgroup: workgroup?.name || 'N/A',
                     location: destination,
-                    activity: activity?.name || 'Stock Adjustment',
+                    activity: (activity && !activity.name.includes('[SYSTEM]')) ? activity.name : '',
                     originalEntry: entry
                 });
             });
@@ -247,7 +249,12 @@ export default function Dashboard() {
                                 </div>
                             </td>
                             <td data-label="Context">
-                                <div style={{ fontSize: '0.9rem', color: 'hsl(var(--text-main))' }}>{mov.workgroup} / {mov.location}</div>
+                                <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'white' }}>{mov.location}</div>
+                                <div style={{ fontSize: '0.8rem', color: 'hsl(var(--text-muted))', marginTop: '2px' }}>
+                                    {mov.activity}{mov.activity && mov.workgroup !== 'N/A' ? ' • ' : ''}
+                                    {mov.workgroup !== 'N/A' ? mov.workgroup : ''}
+                                    {!mov.activity && mov.workgroup === 'N/A' && <span style={{ fontStyle: 'italic' }}>Operational Intake</span>}
+                                </div>
                             </td>
                             <td data-label="Quantity">
                                 <div style={{ fontWeight: 800, color: mov.type === 'RECEIVE' ? 'hsl(var(--success))' : 'hsl(var(--danger))' }}>
