@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchableSelect from '../components/SearchableSelect';
 
 export default function Dashboard() {
-  const { materials, allEntries, fields, activities, workgroups, deleteEntry, updateEntry, isLoading } = useProfile();
+  const { materials, allEntries, fields, activities, workgroups, workers, vehicles, deleteEntry, updateEntry, isLoading } = useProfile();
   const navigate = useNavigate();
 
   // Filter & Pagination State
@@ -31,6 +31,16 @@ export default function Dashboard() {
                 const field = (fields || []).find(f => f.id === entry.field_id);
                 const activity = (activities || []).find(a => a.id === entry.activity_id);
                 const workgroup = (workgroups || []).find(w => w.id === entry.workgroup_id);
+                const worker = (workers || []).find(w => w.id === entry.worker_id);
+                const vehicle = (vehicles || []).find(v => v.id === entry.vehicle_id);
+
+                // Hierarchy-based destination resolution
+                let destination = 'Inventory / Store';
+                if (mu.transaction_type === 'ISSUE') {
+                    if (vehicle) destination = `${vehicle.name} (${vehicle.registration_no || 'N/A'})`;
+                    else if (worker) destination = worker.name;
+                    else if (field && !field.name.includes('[SYSTEM]')) destination = field.name;
+                }
                 
                 log.push({
                     id: `${entry.id}-${idx}`,
@@ -41,7 +51,7 @@ export default function Dashboard() {
                     amount: mu.amount,
                     type: mu.transaction_type || 'ISSUE',
                     workgroup: workgroup?.name || 'N/A',
-                    location: field?.name || 'Inventory',
+                    location: destination,
                     activity: activity?.name || 'Stock Adjustment',
                     originalEntry: entry
                 });
@@ -78,7 +88,7 @@ export default function Dashboard() {
     });
 
     return filtered;
-  }, [allEntries, materials, fields, activities, workgroups, searchTerm, typeFilter, sortConfig]);
+  }, [allEntries, materials, fields, activities, workgroups, workers, vehicles, searchTerm, typeFilter, sortConfig]);
 
   // Pagination Logic ...
   const totalPages = Math.ceil(movements.length / itemsPerPage);
