@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { Package, Lock, Mail, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Package, Lock, Mail, AlertCircle, CheckCircle2, Languages } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 export default function Login() {
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,6 +12,11 @@ export default function Login() {
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState(null);
   const [message, setMessage] = useState(null);
+
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'ms' : 'en';
+    i18n.changeLanguage(newLang);
+  };
 
   const handleAuth = async (e) => {
     e.preventDefault();
@@ -29,7 +36,7 @@ export default function Login() {
           },
         });
         if (error) throw error;
-        setMessage('Success! Please check your email for the confirmation link.');
+        setMessage(t('login.successCheckEmail', 'Success! Please check your email for the confirmation link.'));
       } else {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -46,13 +53,38 @@ export default function Login() {
 
   return (
     <div className="app-container" style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-      <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '400px', padding: '40px' }}>
+      <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '400px', padding: '40px', position: 'relative' }}>
         
+        <button 
+          onClick={toggleLanguage}
+          style={{ 
+            position: 'absolute',
+            top: '20px',
+            right: '20px',
+            background: 'rgba(255, 255, 255, 0.05)', 
+            border: '1px solid var(--glass-border)',
+            color: 'var(--text-secondary)',
+            padding: '6px 12px',
+            borderRadius: '20px',
+            cursor: 'pointer',
+            fontSize: '0.75rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            transition: 'var(--transition)'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.1)'}
+          onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
+        >
+          <Languages size={14} />
+          {i18n.language === 'en' ? 'Bahasa Melayu' : 'English'}
+        </button>
+
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
           <Package size={48} color="var(--accent-primary)" style={{ marginBottom: '16px' }} />
-          <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>{isSignUp ? 'Create Account' : 'Welcome Back'}</h1>
+          <h1 style={{ fontSize: '2rem', marginBottom: '8px' }}>{isSignUp ? t('login.createAccount') : t('login.title')}</h1>
           <p style={{ color: 'var(--text-secondary)' }}>
-            {isSignUp ? 'Join the Shared Inventory network' : 'Sign in to access the Shared Inventory'}
+            {isSignUp ? t('login.joinNetwork', 'Join the Shared Inventory network') : t('login.subtitle')}
           </p>
         </div>
 
@@ -73,7 +105,7 @@ export default function Login() {
         <form onSubmit={handleAuth}>
           {isSignUp && (
             <div className="input-group">
-              <label className="input-label">Username</label>
+              <label className="input-label">{t('login.username', 'Username')}</label>
               <div style={{ position: 'relative' }}>
                 <Package size={18} style={{ position: 'absolute', left: '14px', top: '12px', color: 'var(--text-secondary)' }} />
                 <input 
@@ -90,7 +122,7 @@ export default function Login() {
           )}
 
           <div className="input-group">
-            <label className="input-label">Email Address</label>
+            <label className="input-label">{t('login.email')}</label>
             <div style={{ position: 'relative' }}>
               <Mail size={18} style={{ position: 'absolute', left: '14px', top: '12px', color: 'var(--text-secondary)' }} />
               <input 
@@ -106,7 +138,7 @@ export default function Login() {
           </div>
 
           <div className="input-group" style={{ marginBottom: '32px' }}>
-            <label className="input-label">Password</label>
+            <label className="input-label">{t('login.password')}</label>
             <div style={{ position: 'relative' }}>
               <Lock size={18} style={{ position: 'absolute', left: '14px', top: '12px', color: 'var(--text-secondary)' }} />
               <input 
@@ -127,17 +159,17 @@ export default function Login() {
             style={{ width: '100%', padding: '12px' }}
             disabled={loading}
           >
-            {loading ? 'Processing...' : (isSignUp ? 'Sign Up' : 'Sign In')}
+            {loading ? t('login.signingIn') : (isSignUp ? t('login.signUp') : t('login.signIn'))}
           </button>
         </form>
 
         <p style={{ marginTop: '24px', textAlign: 'center', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
-          {isSignUp ? 'Already have an account?' : "Don't have an account?"}
+          {isSignUp ? t('login.alreadyHaveAccount', 'Already have an account?') : t('login.noAccount')}
           <button
             onClick={() => { setIsSignUp(!isSignUp); setError(null); setMessage(null); }}
             style={{ background: 'none', border: 'none', color: 'var(--accent-primary)', textDecoration: 'underline', marginLeft: '8px', cursor: 'pointer', fontWeight: 600, padding: 0 }}
           >
-            {isSignUp ? 'Sign In' : 'Sign Up'}
+            {isSignUp ? t('login.signIn') : t('login.signUp')}
           </button>
         </p>
 

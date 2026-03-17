@@ -7,16 +7,18 @@ import MaterialRegister from './pages/MaterialRegister';
 import MaterialIssue from './pages/MaterialIssue';
 import Settings from './pages/Settings';
 import { ProfileProvider } from './contexts/ProfileContext';
+import { useTranslation } from 'react-i18next';
 
 import { useProfile } from './contexts/ProfileContext';
 
 function AppContent() {
+  const { t } = useTranslation();
   const { currentProfile, isLoading } = useProfile();
 
   if (isLoading) {
     return (
       <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <p style={{ color: 'var(--text-secondary)' }}>Initializing ecosystem...</p>
+        <p style={{ color: 'var(--text-secondary)' }}>{t('app.loading')}</p>
       </div>
     );
   }

@@ -1,0 +1,31 @@
+{
+  "login": {
+    "title": "Inventory Management",
+    "subtitle": "Sign in to access shared estate inventory",
+    "email": "Email Address",
+    "password": "Password",
+    "signIn": "Sign In",
+    "signingIn": "Signing In...",
+    "error": "Error",
+    "noAccount": "Don't have an account?",
+    "signUp": "Sign Up",
+    "createAccount": "Create Account"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "materialIssue": "Material Issue",
+    "materialRegister": "Material Register",
+    "materialsView": "Inventory List",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "app": {
+    "title": "Shared Inventory",
+    "loading": "Initializing ecosystem..."
+  },
+  "common": {
+    "language": "Language",
+    "english": "English",
+    "malay": "Malay"
+  }
+}

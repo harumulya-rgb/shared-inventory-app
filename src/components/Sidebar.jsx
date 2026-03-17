@@ -1,19 +1,26 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Package, Settings, LogOut, ClipboardList, ShieldCheck, Send } from 'lucide-react';
+import { LayoutDashboard, Package, Settings, LogOut, ClipboardList, ShieldCheck, Send, Languages } from 'lucide-react';
 import { supabase } from '../supabaseClient';
 import { useProfile } from '../contexts/ProfileContext';
+import { useTranslation } from 'react-i18next';
 
 export default function Sidebar({ isOpen, onClose }) {
+  const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { currentProfile, isLoading } = useProfile();
 
+  const toggleLanguage = () => {
+    const newLang = i18n.language === 'en' ? 'ms' : 'en';
+    i18n.changeLanguage(newLang);
+  };
+
   const navItems = [
-    { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-    { name: 'Materials', path: '/materials', icon: Package },
-    { name: 'Issue Materials', path: '/issue', icon: Send },
-    { name: 'Register Material', path: '/register', icon: ClipboardList },
-    { name: 'Settings', path: '/settings', icon: Settings },
+    { name: t('nav.dashboard'), path: '/', icon: LayoutDashboard },
+    { name: t('nav.materialsView'), path: '/materials', icon: Package },
+    { name: t('nav.materialIssue'), path: '/issue', icon: Send },
+    { name: t('nav.materialRegister'), path: '/register', icon: ClipboardList },
+    { name: t('nav.settings'), path: '/settings', icon: Settings },
   ].filter(item => currentProfile || item.path === '/settings');
 
   const handleSignOut = async () => {
@@ -52,7 +59,7 @@ export default function Sidebar({ isOpen, onClose }) {
           }
         `}
       </style>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '48px', paddingLeft: '10px' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '32px', paddingLeft: '10px' }}>
         <div style={{ 
           background: 'linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-h) 80% 45%))',
           padding: '10px',
@@ -68,7 +75,7 @@ export default function Sidebar({ isOpen, onClose }) {
       </div>
 
       <div style={{ 
-        marginBottom: '32px', 
+        marginBottom: '24px', 
         padding: '16px', 
         background: 'rgba(255,255,255,0.03)', 
         borderRadius: 'var(--radius-md)',
@@ -90,6 +97,33 @@ export default function Sidebar({ isOpen, onClose }) {
           <p style={{ fontSize: '0.65rem', color: 'hsl(var(--text-muted))', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Estate</p>
           <p style={{ fontSize: '0.95rem', fontWeight: 600, margin: 0, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
             {isLoading ? '...' : currentProfile ? currentProfile.name : 'Select Estate'}
+          </p>
+        </div>
+      </div>
+
+      <div style={{ 
+        marginBottom: '32px', 
+        padding: '12px 16px', 
+        background: 'rgba(255,255,255,0.03)', 
+        borderRadius: 'var(--radius-md)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        cursor: 'pointer',
+        transition: 'var(--transition)',
+        border: '1px solid var(--glass-border)'
+      }}
+      onClick={toggleLanguage}
+      onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
+      onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+      >
+        <div style={{ background: 'hsla(var(--primary), 0.1)', padding: '8px', borderRadius: '10px', color: 'hsl(var(--primary))' }}>
+          <Languages size={18} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <p style={{ fontSize: '0.65rem', color: 'hsl(var(--text-muted))', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>{t('common.language')}</p>
+          <p style={{ fontSize: '0.9rem', fontWeight: 600, margin: 0 }}>
+            {i18n.language === 'en' ? 'English' : 'Melayu'}
           </p>
         </div>
       </div>
@@ -154,7 +188,7 @@ export default function Sidebar({ isOpen, onClose }) {
           onMouseLeave={(e) => { e.currentTarget.style.color = 'hsl(var(--text-muted))'; e.currentTarget.style.borderColor = 'var(--glass-border)'; }}
         >
           <LogOut size={18} />
-          <span style={{ fontWeight: 600 }}>Secure Sign Out</span>
+          <span style={{ fontWeight: 600 }}>{t('nav.logout', 'Secure Sign Out')}</span>
         </button>
       </div>
     </aside>

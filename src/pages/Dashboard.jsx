@@ -284,36 +284,65 @@ export default function Dashboard() {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--glass-border)' }}>
-                <p style={{ fontSize: '0.85rem', color: 'hsl(var(--text-muted))' }}>
-                    Showing <span style={{ color: 'white', fontWeight: 600 }}>{(currentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: 'white', fontWeight: 600 }}>{Math.min(currentPage * itemsPerPage, movements.length)}</span> of <span style={{ color: 'white', fontWeight: 600 }}>{movements.length}</span> movements
+            <div className="flex-mobile-column" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--glass-border)', gap: '20px' }}>
+                <p style={{ fontSize: '0.85rem', color: 'hsl(var(--text-muted))', margin: 0 }}>
+                    Showing <span style={{ color: 'white', fontWeight: 600 }}>{(currentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: 'white', fontWeight: 600 }}>{Math.min(currentPage * itemsPerPage, movements.length)}</span> of <span style={{ color: 'white', fontWeight: 600 }}>{movements.length}</span>
                 </p>
-                <div style={{ display: 'flex', gap: '8px' }}>
+                <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
                     <button 
                         className="btn btn-secondary" 
                         disabled={currentPage === 1} 
                         onClick={() => setCurrentPage(p => p - 1)}
-                        style={{ padding: '8px' }}
+                        style={{ padding: '8px', minWidth: '36px' }}
                     >
-                        <ChevronLeft size={18} />
+                        <ChevronLeft size={16} />
                     </button>
-                    {[...Array(totalPages)].map((_, i) => (
-                        <button 
-                            key={i} 
-                            onClick={() => setCurrentPage(i + 1)}
-                            className={`btn ${currentPage === i + 1 ? 'btn-primary' : 'btn-secondary'}`}
-                            style={{ minWidth: '40px', padding: '8px' }}
-                        >
-                            {i + 1}
-                        </button>
-                    ))}
+
+                    {(() => {
+                        const pages = [];
+                        const delta = window.innerWidth < 640 ? 1 : 2; // Show fewer neighbors on very small screens
+                        
+                        for (let i = 1; i <= totalPages; i++) {
+                            if (
+                                i === 1 || 
+                                i === totalPages || 
+                                (i >= currentPage - delta && i <= currentPage + delta)
+                            ) {
+                                pages.push(i);
+                            } else if (
+                                (i === currentPage - delta - 1) || 
+                                (i === currentPage + delta + 1)
+                            ) {
+                                pages.push('...');
+                            }
+                        }
+
+                        // Remove duplicate ellipses
+                        const uniquePages = pages.filter((item, index) => pages.indexOf(item) === index);
+
+                        return uniquePages.map((page, i) => (
+                            page === '...' ? (
+                                <span key={`sep-${i}`} style={{ color: 'hsl(var(--text-muted))', padding: '0 4px' }}>...</span>
+                            ) : (
+                                <button 
+                                    key={page} 
+                                    onClick={() => setCurrentPage(page)}
+                                    className={`btn ${currentPage === page ? 'btn-primary' : 'btn-secondary'}`}
+                                    style={{ minWidth: '36px', padding: '8px', height: '36px', fontSize: '0.85rem' }}
+                                >
+                                    {page}
+                                </button>
+                            )
+                        ));
+                    })()}
+
                     <button 
                         className="btn btn-secondary" 
                         disabled={currentPage === totalPages} 
                         onClick={() => setCurrentPage(p => p + 1)}
-                        style={{ padding: '8px' }}
+                        style={{ padding: '8px', minWidth: '36px' }}
                     >
-                        <ChevronRight size={18} />
+                        <ChevronRight size={16} />
                     </button>
                 </div>
             </div>

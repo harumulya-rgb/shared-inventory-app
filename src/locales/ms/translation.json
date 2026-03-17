@@ -1,0 +1,31 @@
+{
+  "login": {
+    "title": "Pengurusan Inventori",
+    "subtitle": "Log masuk untuk akses inventori ladang bersama",
+    "email": "Alamat Emel",
+    "password": "Kata Laluan",
+    "signIn": "Log Masuk",
+    "signingIn": "Log Masuk...",
+    "error": "Ralat",
+    "noAccount": "Tiada akaun?",
+    "signUp": "Daftar",
+    "createAccount": "Cipta Akaun"
+  },
+  "nav": {
+    "dashboard": "Papan Pemuka",
+    "materialIssue": "Pengeluaran Bahan",
+    "materialRegister": "Pendaftaran Bahan",
+    "materialsView": "Senarai Inventori",
+    "settings": "Tetapan",
+    "logout": "Log Keluar"
+  },
+  "app": {
+    "title": "Inventori Bersama",
+    "loading": "Memulakan ekosistem..."
+  },
+  "common": {
+    "language": "Bahasa",
+    "english": "Inggeris",
+    "malay": "Melayu"
+  }
+}
