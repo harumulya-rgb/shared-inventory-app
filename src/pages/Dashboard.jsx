@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useProfile } from '../contexts/ProfileContext';
 import { 
     Package, TrendingUp, AlertCircle, Clock, Search, Filter, 
@@ -8,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchableSelect from '../components/SearchableSelect';
 
 export default function Dashboard() {
+  const { t } = useTranslation();
   const { materials, allEntries, fields, activities, workgroups, workers, vehicles, deleteEntry, updateEntry, isLoading } = useProfile();
   const navigate = useNavigate();
 
@@ -110,18 +112,18 @@ export default function Dashboard() {
     return (
         <div className="animate-fade-in" style={{ height: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: '20px' }}>
             <div className="spinner" style={{ width: '50px', height: '50px', border: '4px solid rgba(255,255,255,0.1)', borderTopColor: 'hsl(var(--primary))', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
-            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '1.1rem', fontWeight: 600 }}>Synchronizing Global Ledger...</p>
+            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '1.1rem', fontWeight: 600 }}>{t('dashboard.ledgerSync', 'Synchronizing Global Ledger...')}</p>
         </div>
     );
   }
 
   const handleDelete = async (entryId) => {
-    if (window.confirm('Delete this movement entry and all associated line items?')) {
+    if (window.confirm(t('dashboard.deleteConfirm', 'Delete this movement entry and all associated line items?'))) {
         const { error } = await deleteEntry(entryId);
         if (error) {
-            setStatus({ type: 'error', message: `Expunge failed: ${error.message}` });
+            setStatus({ type: 'error', message: `${t('dashboard.expungeFailed', 'Expunge failed')}: ${error.message}` });
         } else {
-            setStatus({ type: 'success', message: 'Logistical entry expunged from ledger.' });
+            setStatus({ type: 'success', message: t('dashboard.expunged', 'Logistical entry expunged from ledger.') });
             setTimeout(() => setStatus({ type: null, message: '' }), 4000);
         }
     }
@@ -137,8 +139,8 @@ export default function Dashboard() {
   return (
     <div className="animate-fade-in" style={{ paddingBottom: '60px' }}>
       <header style={{ marginBottom: '40px' }}>
-        <h1 style={{ fontWeight: 800 }}>Intelligence</h1>
-        <p style={{ color: 'hsl(var(--text-muted))', fontSize: '1.1rem' }}>Material trajectories and operational flow analytics.</p>
+        <h1 style={{ fontWeight: 800 }}>{t('dashboard.intelligence', 'Intelligence')}</h1>
+        <p style={{ color: 'hsl(var(--text-muted))', fontSize: '1.1rem' }}>{t('dashboard.subtitle', 'Material trajectories and operational flow analytics.')}</p>
       </header>
 
       {/* Stats Grid */}
@@ -148,7 +150,7 @@ export default function Dashboard() {
             <Package size={24} />
           </div>
           <div>
-            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Total Materials</p>
+            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>{t('dashboard.totalMaterials', 'Total Materials')}</p>
             <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: 800 }}>{stats.totalMaterials}</h2>
           </div>
           <div className="hide-mobile" style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><Package size={60} /></div>
@@ -159,7 +161,7 @@ export default function Dashboard() {
             <TrendingUp size={24} />
           </div>
           <div>
-            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Average Price</p>
+            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>{t('dashboard.avgPrice', 'Average Price')}</p>
             <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: 800 }}>${stats.avgPrice}</h2>
           </div>
           <div className="hide-mobile" style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><TrendingUp size={60} /></div>
@@ -170,7 +172,7 @@ export default function Dashboard() {
             <AlertCircle size={24} />
           </div>
           <div>
-            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>Critial Alerts</p>
+            <p style={{ color: 'hsl(var(--text-muted))', fontSize: '0.8rem', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>{t('dashboard.criticalAlerts', 'Critical Alerts')}</p>
             <h2 style={{ fontSize: '2rem', margin: 0, fontWeight: 800 }}>{stats.alerts}</h2>
           </div>
           <div className="hide-mobile" style={{ position: 'absolute', top: '10px', right: '10px', opacity: 0.1 }}><AlertCircle size={60} /></div>
@@ -201,7 +203,7 @@ export default function Dashboard() {
                 <div style={{ position: 'relative' }}>
                     <Search size={16} style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'hsl(var(--text-muted))' }} />
                     <input 
-                        type="text" placeholder="Search..." 
+                        type="text" placeholder={t('dashboard.search', 'Search...')}
                         style={{ padding: '10px 10px 10px 36px', borderRadius: '10px' }} 
                         className="input-field" 
                         value={searchTerm}
@@ -210,9 +212,9 @@ export default function Dashboard() {
                 </div>
                 <SearchableSelect 
                     options={[
-                        { value: 'ALL', label: 'All Types' },
-                        { value: 'ISSUE', label: 'Issuance' },
-                        { value: 'RECEIVE', label: 'Receipt' }
+                        { value: 'ALL', label: t('dashboard.allTypes', 'All Types') },
+                        { value: 'ISSUE', label: t('dashboard.issuance', 'Issuance') },
+                        { value: 'RECEIVE', label: t('dashboard.receipt', 'Receipt') }
                     ]}
                     value={typeFilter}
                     onChange={(e) => { setTypeFilter(e.target.value); setCurrentPage(1); }}
@@ -226,14 +228,14 @@ export default function Dashboard() {
                 <tr>
                     <th style={{ cursor: 'pointer' }} onClick={() => toggleSort('date')}>Date {sortConfig.key === 'date' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
                     <th style={{ cursor: 'pointer' }} onClick={() => toggleSort('materialName')}>Resource {sortConfig.key === 'materialName' && (sortConfig.direction === 'asc' ? '↑' : '↓')}</th>
-                    <th>Destination / Context</th>
-                    <th>Quantities</th>
-                    <th style={{ textAlign: 'right' }}>Management</th>
+                    <th>{t('dashboard.destination', 'Destination / Context')}</th>
+                    <th>{t('dashboard.quantities', 'Quantities')}</th>
+                    <th style={{ textAlign: 'right' }}>{t('dashboard.management', 'Management')}</th>
                 </tr>
             </thead>
             <tbody>
                 {paginatedMovements.length === 0 ? (
-                    <tr><td colSpan="5" style={{ textAlign: 'center', padding: '60px', color: 'hsl(var(--text-muted))', background: 'transparent' }}>No logistical movements synchronized.</td></tr>
+                    <tr><td colSpan="5" style={{ textAlign: 'center', padding: '60px', color: 'hsl(var(--text-muted))', background: 'transparent' }}>{t('dashboard.noMovements', 'No logistical movements synchronized.')}</td></tr>
                 ) : (
                     paginatedMovements.map((mov) => (
                         <tr key={mov.id}>
@@ -286,7 +288,7 @@ export default function Dashboard() {
         {totalPages > 1 && (
             <div className="flex-mobile-column" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '32px', paddingTop: '24px', borderTop: '1px solid var(--glass-border)', gap: '20px' }}>
                 <p style={{ fontSize: '0.85rem', color: 'hsl(var(--text-muted))', margin: 0 }}>
-                    Showing <span style={{ color: 'white', fontWeight: 600 }}>{(currentPage - 1) * itemsPerPage + 1}</span> to <span style={{ color: 'white', fontWeight: 600 }}>{Math.min(currentPage * itemsPerPage, movements.length)}</span> of <span style={{ color: 'white', fontWeight: 600 }}>{movements.length}</span>
+                    {t('dashboard.showing', 'Showing')} <span style={{ color: 'white', fontWeight: 600 }}>{(currentPage - 1) * itemsPerPage + 1}</span> {t('dashboard.to', 'to')} <span style={{ color: 'white', fontWeight: 600 }}>{Math.min(currentPage * itemsPerPage, movements.length)}</span> {t('dashboard.of', 'of')} <span style={{ color: 'white', fontWeight: 600 }}>{movements.length}</span>
                 </p>
                 <div style={{ display: 'flex', gap: '6px', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
                     <button 

@@ -11,7 +11,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const { currentProfile, isLoading } = useProfile();
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'ms' : 'en';
+    const newLang = i18n.resolvedLanguage === 'en' ? 'ms' : 'en';
     i18n.changeLanguage(newLang);
   };
 
@@ -123,7 +123,7 @@ export default function Sidebar({ isOpen, onClose }) {
         <div style={{ flex: 1 }}>
           <p style={{ fontSize: '0.65rem', color: 'hsl(var(--text-muted))', margin: '0 0 2px 0', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: 700 }}>{t('common.language')}</p>
           <p style={{ fontSize: '0.9rem', fontWeight: 600, margin: 0 }}>
-            {i18n.language === 'en' ? 'English' : 'Melayu'}
+            {i18n.resolvedLanguage === 'en' ? 'English' : 'Melayu'}
           </p>
         </div>
       </div>

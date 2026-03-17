@@ -14,7 +14,7 @@ export default function Login() {
   const [message, setMessage] = useState(null);
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'ms' : 'en';
+    const newLang = i18n.resolvedLanguage === 'en' ? 'ms' : 'en';
     i18n.changeLanguage(newLang);
   };
 
@@ -77,7 +77,7 @@ export default function Login() {
           onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)'}
         >
           <Languages size={14} />
-          {i18n.language === 'en' ? 'Bahasa Melayu' : 'English'}
+          {i18n.resolvedLanguage === 'en' ? 'Bahasa Melayu' : 'English'}
         </button>
 
         <div style={{ textAlign: 'center', marginBottom: '32px' }}>
